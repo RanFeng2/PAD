@@ -1,0 +1,7 @@
+*.pth
+*.pyc
+logs/
+exp/
+.vscode/
+pretrains/
+results/

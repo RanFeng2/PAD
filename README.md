@@ -1,4 +1,4 @@
-# PAD🗒️(Segmentation with RGB-SAR) 
+# PAD🧩(Segmentation with RGB-SAR) 
 
 > This is the official implementation of "**PAD: Phase-Amplitude Decoupling Fusion for Multi-Modal Land Cover Classification**"[[paper]](https://ieeexplore.ieee.org/document/11204689).
 
@@ -10,7 +10,7 @@ The following datasets are included for RGB-SAR semantic segmentation in this re
 - **DDHR-SK**: A dataset focusing on cloud-affected RGB-SAR imagery for land cover classification in Pohang City, South Korea. It includes **five** land cover types: buildings, roads, greenery, water, and farmland.
 
 
-> All datasets and split files can be downloaded in [here](https://pan.baidu.com/s/1JkbsKOibCcQYfBR9sanG8g?pwd=36vk).
+> All datasets and split files can be downloaded in [`[here]`](https://pan.baidu.com/s/1JkbsKOibCcQYfBR9sanG8g?pwd=36vk).
 
 For all datasets, we performed necessary preprocessing, including:
 - **extract the bands we need**
@@ -73,31 +73,61 @@ e.g.:
 which means `rgb`, `sar`, `label` files are stored in `opt`, `sar`, `lbl8` folders, respectively.
 
 ### Step 2: Create New Conda Environment
-
+```shell
+conda env create -f environment.yaml
+conda activate mmseg_cu121
+```
 
 ### Step 3: Test
-
-### Step 4: Train
-#### 1. Download Pretraned Weights：
-All pre-trained weights can be downloaded [here](https://pan.baidu.com/s/1JkbsKOibCcQYfBR9sanG8g?pwd=36vk).
+Inference weights can be downloaded in [`[here]`/exp/](https://pan.baidu.com/s/1JkbsKOibCcQYfBR9sanG8g?pwd=36vk) .
 
 ```
 |-- <PAD>
-    |-- <configs>
-    |-- <models>
-    |-- <pretrains>  # where to store pre-trained weights
-    |-- <utils>
-    |-- datasets_DDHR.py
-    |-- datasets.py
-    |-- main_DDHR.py
-    |-- main.py
-    |-- ...
+    |-- <configs>    # where to store config files
+    |-- <pretrains>
+    |-- <exp>        #!!! where to store weights for inference
+    |-- <src>        # main implements
+    |-- train.py
+    |-- test.py      # test script
+    |-- README.md
 ```
 
 
+```shell
+python test.py configs\PAD_whuoptsar.py exp\best_mIoU_whuoptsar_weight.pth  --work-dir results/whuoptsar --out results/whuoptsar --show-dir results/whuoptsar/lbl_color
+```
+
+
+### Step 4: Train
+#### 1. Download Pretraned Weights：
+All pre-trained weights can be downloaded in [`[here]`/pretrains/](https://pan.baidu.com/s/1JkbsKOibCcQYfBR9sanG8g?pwd=36vk).
+
+```
+|-- <PAD>
+    |-- <configs>    # where to store config files
+    |-- <pretrains>  #!!! where to store pre-trained weights
+    |-- <exp>
+    |-- <src>        # main implements
+    |-- train.py     # train script
+    |-- test.py
+    |-- README.md
+```
 
 ## Results
-
+```
++----------+-------+-------+--------+-----------+--------+
+|  Class   |  IoU  |  Acc  | Fscore | Precision | Recall |
++----------+-------+-------+--------+-----------+--------+
+| farmland | 69.85 |  81.0 | 82.25  |   83.54   |  81.0  |
+|   city   |  58.1 | 77.76 |  73.5  |   69.68   | 77.76  |
+| village  |  49.7 | 64.09 |  66.4  |   68.89   | 64.09  |
+|  water   | 65.39 | 78.14 | 79.08  |   80.04   | 78.14  |
+|  forest  | 84.05 | 93.26 | 91.34  |   89.49   | 93.26  |
+|   road   | 43.24 | 60.34 | 60.37  |   60.41   | 60.34  |
+|  other   | 23.47 | 29.19 | 38.02  |   54.52   | 29.19  |
++----------+-------+-------+--------+-----------+--------+
+OA(aAcc): 84.5600  mKappa: 53.9300  mF1(mFscore): 70.1400  mIoU: 56.2600
+```
 
 ## Citations
 If these codes are helpful for your study, please cite:
